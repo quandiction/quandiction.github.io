@@ -352,7 +352,7 @@ footer{border-top:1px solid var(--hair);padding-block:clamp(64px,10vh,110px);pos
       </div>
       <ul class="absent rise">
         <li><s>Signals to trade</s></li>
-        <li><s>A subscription</s></li>
+        <li><s>Subscription tiers</s></li>
         <li><s>Performance numbers</s></li>
         <li><s>A backtest on the storefront</s></li>
         <li><s>Advice of any kind</s></li>
@@ -475,7 +475,7 @@ footer{border-top:1px solid var(--hair);padding-block:clamp(64px,10vh,110px);pos
   "use strict";
 
   /* configuration */
-  var FORM_ENDPOINT = "https://formspree.io/f/REPLACE_WITH_FORM_ID";
+  var FORM_ENDPOINT = "https://buttondown.com/api/emails/embed-subscribe/quandiction";
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -671,20 +671,13 @@ footer{border-top:1px solid var(--hair);padding-block:clamp(64px,10vh,110px);pos
       input.focus();
       return;
     }
-    if (FORM_ENDPOINT.indexOf("REPLACE_WITH_FORM_ID") !== -1) {
-      /* no backend configured yet: honest mailto handoff */
-      location.href = "mailto:hello@quandiction.com?subject=" + encodeURIComponent("Waitlist")
-        + "&body=" + encodeURIComponent("Please add me to the Quandiction waitlist: " + value);
-      say("Opening your mail client\u2026 or write to hello@quandiction.com.", "ok");
-      return;
-    }
     btn.disabled = true;
     say("Sending\u2026");
 
     fetch(FORM_ENDPOINT, {
       method: "POST",
-      headers: {"Content-Type":"application/json", "Accept":"application/json"},
-      body: JSON.stringify({email: value, source: "landing v0"})
+      headers: {"Content-Type":"application/x-www-form-urlencoded"},
+      body: "email=" + encodeURIComponent(value) + "&tag=landing-v0"
     }).then(function(res){
       if (!res.ok) throw new Error(res.status);
       form.style.display = "none";
